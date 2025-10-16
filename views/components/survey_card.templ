@@ -1,0 +1,16 @@
+package components
+
+import (
+	"github.com/whalelogic/whalesurvey/models"
+	"strconv"
+)
+
+templ SurveyCard(survey models.Survey) {
+    <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+        <h2 class="text-2xl font-bold mb-2">{ survey.Title }</h2>
+        <p class="text-gray-700 mb-4">{ survey.Description }</p>
+        <a href={ templ.URL("/surveys/" + strconv.FormatUint(uint64(survey.ID), 10)) } class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Take Survey
+        </a>
+    </div>
+}

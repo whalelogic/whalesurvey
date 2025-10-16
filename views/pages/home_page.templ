@@ -1,0 +1,15 @@
+package pages
+
+import "github.com/whalelogic/whalesurvey/views/layouts"
+
+
+templ HomePage() {
+    @layouts.Base() {
+        <div class="flex flex-col items-center justify-center min-h-screen">
+            <h1 class="text-4xl font-bold mb-8">Welcome to whalelogic.io</h1>
+            <a href="/surveys" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Take a Survey
+            </a>
+        </div>
+    }
+}

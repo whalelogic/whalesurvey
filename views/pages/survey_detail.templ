@@ -1,0 +1,35 @@
+package pages
+
+import (
+	"github.com/whalelogic/whalesurvey/models"
+	"github.com/whalelogic/whalesurvey/views/layouts"
+	"strconv"
+)
+
+templ SurveyDetailPage(survey models.Survey) {
+    @layouts.Base() {
+        <div class="container mx-auto py-8">
+            <h1 class="text-4xl font-bold mb-2">{ survey.Title }</h1>
+            <p class="text-gray-600 mb-8">{ survey.Description }</p>
+
+            <form action={ templ.URL("/surveys/" + strconv.FormatUint(uint64(survey.ID), 10) + "/submit") } method="POST">
+                for qIndex, question := range survey.Questions {
+                    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                        <p class="text-xl font-semibold mb-4">{ question.Question }</p>
+                        <div class="space-y-2">
+                            for oIndex, option := range question.Options {
+                                <div>
+                                    <input type="radio" id={ "q" + strconv.Itoa(qIndex) + "o" + strconv.Itoa(oIndex) } name={ "question_" + strconv.Itoa(qIndex) } value={ option.Text } required />
+                                    <label for={ "q" + strconv.Itoa(qIndex) + "o" + strconv.Itoa(oIndex) } class="ml-2">{ option.Text }</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Submit Survey
+                </button>
+            </form>
+        </div>
+    }
+}

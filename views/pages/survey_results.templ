@@ -1,0 +1,53 @@
+package pages
+
+import (
+	"fmt"
+	"github.com/whalelogic/whalesurvey/models"
+	"github.com/whalelogic/whalesurvey/views/layouts"
+)
+
+templ SurveyResultsPage(survey models.Survey, results []models.QuestionStats) {
+    @layouts.Base() {
+        <div class="container mx-auto py-8">
+            <h1 class="text-4xl font-bold mb-2">{ survey.Title } - Results</h1>
+
+            for _, stats := range results {
+                for _, question := range survey.Questions {
+                    if question.ID == stats.QuestionID {
+                        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                            <p class="text-xl font-semibold mb-4">{ question.Question }</p>
+                            <div class="space-y-2">
+                                if stats.ResponseCount > 0 {
+                                    switch stats.QuestionType {
+                                    case "multiple_choice", "checkbox":
+                                        for _, optionStat := range stats.OptionStats {
+                                            <div class="flex justify-between">
+                                                <span>{ optionStat.OptionText }</span>
+                                                <span>{ fmt.Sprintf("%d (%.2f%%)", optionStat.Count, optionStat.Percentage) }</span>
+                                            </div>
+                                        }
+                                    case "rating":
+                                        if stats.RatingStats != nil {
+                                            <div class="flex justify-between">
+                                                <span>Average Rating</span>
+                                                <span>{ fmt.Sprintf("%.2f", stats.RatingStats.Average) }</span>
+                                            </div>
+                                        }
+                                    case "text":
+                                        for _, answer := range stats.TextAnswers {
+                                            <div class="p-2 border-b">
+                                                { answer }
+                                            </div>
+                                        }
+                                    }
+                                } else {
+                                    <p>No results for this question yet.</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    }
+}

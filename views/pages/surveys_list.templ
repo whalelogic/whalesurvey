@@ -1,0 +1,16 @@
+package pages
+
+import "github.com/whalelogic/whalesurvey/views/layouts"
+import "github.com/whalelogic/whalesurvey/views/components"
+import "github.com/whalelogic/whalesurvey/models"
+
+templ SurveysListPage(surveys []models.Survey) {
+    @layouts.Base() {
+        <div class="container mx-auto py-8">
+            <h1 class="text-4xl font-bold mb-8">All Surveys</h1>
+            for _, survey := range surveys {
+                @components.SurveyCard(survey)
+            }
+        </div>
+    }
+}
