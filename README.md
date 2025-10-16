@@ -1,6 +1,6 @@
-# 🧭 Survey Application
+# 🧭 Survey Application 
 
-A simple, modular **Go web application** that lets users create, manage, and take surveys.
+🎟️ A simple, modular **Go web application** that lets users create, manage, and take surveys.
 This project demonstrates clean architecture with handlers, models, templates, and static assets, all connected to a SQLite database.
 
 ---
