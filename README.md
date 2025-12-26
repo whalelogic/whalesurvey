@@ -14,8 +14,6 @@ This project demonstrates clean architecture with handlers, models, templates, a
 * Static files for styling and client scripts
 * Fully scaffolded Go project (ready for extension)
 
----
-
 ## 🧩 Project Structure
 
 ```
@@ -30,7 +28,42 @@ This project demonstrates clean architecture with handlers, models, templates, a
 └── go.sum             # Dependencies checksum
 ```
 
----
+#### Types
+
+- Survey, Question, Answer, AnswerInput, SurveyService, Response, Option, Database
+- SurveyStats, QuestionStats, OptionStat, RatingStats
+
+e.g.
+```
+type AnswerInput struct {
+	QuestionID uint   `json:"question_id"`
+	AnswerText string `json:"answer_text,omitempty"`
+	OptionID   *uint  `json:"option_id,omitempty"`
+	Rating     *int   `json:"rating,omitempty"`
+}
+
+type SurveyService struct {
+	db *Database
+}
+
+```
+#### Signatures
+```
+func NewSurveyService(db *Database) *SurveyService
+func (s *SurveyService) CreateSurvey(title, description string) (*Survey, error) 
+func (s *SurveyService) AddQuestion(surveyID uint, questionType, question string, required bool, options []string) (*Question, error)
+func (s *SurveyService) SubmitResponse(surveyID uint, userID *string, ipAddress, userAgent string, answers []AnswerInput) (*Response, error)
+func (s *SurveyService) GetSurvey(id uint) (*Survey, error)
+func (s *SurveyService) UpdateSurvey(id uint, title, description string, isActive bool) error
+func (s *SurveyService) GetAllSurveys() ([]Survey, error)
+func (s *SurveyService) DeleteSurvey(id uint) error
+func (s *SurveyService) GetSurveyStats(surveyID uint) (*SurveyStats, error)
+func (s *SurveyService) GetQuestionStats(surveyID uint) ([]QuestionStats, error)
+func (s *SurveyService) getOptionStats(questionID uint) []OptionStat
+func (s *SurveyService) getRatingStats(questionID uint) *RatingStats 
+func (s *SurveyService) getTextAnswers(questionID uint, limit int) []string
+
+```
 
 ## ⚙️ Installation & Setup
 
@@ -102,8 +135,8 @@ http://localhost:8080
 ## 🧑‍💻 Author
 
 **Keith Thomson**
-Computer Science Student • Army Veteran • Web Developer
-💡 Focused on Go, Rust, and system design for intelligent web applications.
+Computer Science Student • Army Veteran • Cloud Developer
+💡 Focused on Go, Rust, and system design for data applications.
 
 ---
 
