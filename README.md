@@ -61,6 +61,14 @@ http://localhost:8080
 
 ---
 
+## 🎥 Screenshots
+
+<img width="1088" height="832" alt="image" src="https://github.com/user-attachments/assets/1f0ff7d9-9786-4873-a94a-59660d6856a2" />
+<img width="1073" height="636" alt="image" src="https://github.com/user-attachments/assets/0b4127db-cf90-4ad0-8e8b-7bc313b0af68" />
+
+---
+
+
 ## 🧠 Technical Overview
 
 * **Language:** Go (1.21+)
@@ -71,7 +79,7 @@ http://localhost:8080
 
 ---
 
-## 🧱 Example Flow
+## 🧱 Flow
 
 1. **User visits homepage** — chooses a survey or creates one.
 2. **Handler** processes requests (`handlers/survey.go`).
