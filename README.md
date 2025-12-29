@@ -1,76 +1,112 @@
-# 🧭 Survey Application 
+# 🧭 Survey Application
 
-🎟️ A simple, modular **Go web application** that lets users create, manage, and take surveys.
-This project demonstrates clean architecture with handlers, models, templates, and static assets, all connected to a SQLite database.
+🎟️ A simple, modular **Go web application** that lets users create, manage, and analyze surveys.
+This project demonstrates clean architecture using handlers, models, templates, and static assets, all backed by a SQLite database.
 
 ---
 
 ## 🚀 Features
 
-* Create and manage surveys
-* Store questions and responses in a SQLite database
-* Modular structure with handlers, models, and views
-* HTML templates for user interaction
-* Static files for styling and client scripts
-* Fully scaffolded Go project (ready for extension)
+* **Survey Management:** Create, read, update, and delete (CRUD) surveys.
+* **Dynamic Questions:** Support for text answers, multiple choice, and ratings.
+* **Data Persistence:** Robust storage using SQLite.
+* **Analytics:** Built-in calculation of survey statistics (response counts, rating averages).
+* **Modular Design:** Clean separation of concerns (Handlers, Services, Models, Views).
+* **Frontend:** HTML templates with static CSS/JS support.
+
+## ⚙️ Technical Overview
+
+* **Language:** Go (1.21+)
+* **Database:** SQLite (`surveys.db`)
+* **Routing:** Standard `net/http` (compatible with `chi` or `mux`)
+* **Templating:** Go’s `html/template` engine
+* **Architecture:** Service-Repository pattern
+
+---
 
 ## 🧩 Project Structure
 
-```
+```bash
 .
 ├── handlers/          # HTTP route handlers (controllers)
-├── models/            # Data models and database interactions
-├── static/            # CSS, JS, and other static files
-├── views/             # HTML templates (survey forms, results, etc.)
-├── main.go            # Entry point for the application
-├── surveys.db         # SQLite database
-├── go.mod             # Go module file
-└── go.sum             # Dependencies checksum
+├── models/            # Data structs and database logic
+├── services/          # Business logic (SurveyService)
+├── static/            # CSS, JS, and images
+├── views/             # HTML templates (forms, results, dashboard)
+├── main.go            # Application entry point
+├── surveys.db         # SQLite database file
+├── go.mod             # Go module definition
+└── go.sum             # Checksums
 ```
 
-#### Types
+## 🏗️ Architecture & Core Logic
 
-- Survey, Question, Answer, AnswerInput, SurveyService, Response, Option, Database
-- SurveyStats, QuestionStats, OptionStat, RatingStats
+The application relies on strong typing and a centralized service layer to handle business logic.
 
-e.g.
-```
+<details>
+<summary><b>Click to view Core Types & API Signatures</b></summary>
+
+### Key Data Models
+The application uses strict struct definitions for database mapping and JSON responses.
+
+```go
+// Example: Input structure for submitting answers
 type AnswerInput struct {
-	QuestionID uint   `json:"question_id"`
-	AnswerText string `json:"answer_text,omitempty"`
-	OptionID   *uint  `json:"option_id,omitempty"`
-	Rating     *int   `json:"rating,omitempty"`
+    QuestionID uint   `json:"question_id"`
+    AnswerText string `json:"answer_text,omitempty"`
+    OptionID   *uint  `json:"option_id,omitempty"`
+    Rating     *int   `json:"rating,omitempty"`
 }
 
+// Service Layer wrapper
 type SurveyService struct {
-	db *Database
+    db *Database
 }
+```
 
-```
-#### Signatures
-```
+**Other Core Types:**
+`Survey`, `Question`, `Answer`, `Response`, `Option`, `Database`
+**Analytics Types:**
+`SurveyStats`, `QuestionStats`, `OptionStat`, `RatingStats`
+
+### Service API
+The `SurveyService` acts as the bridge between the HTTP handlers and the Database.
+
+**Survey Management**
+```go
 func NewSurveyService(db *Database) *SurveyService
 func (s *SurveyService) CreateSurvey(title, description string) (*Survey, error) 
-func (s *SurveyService) AddQuestion(surveyID uint, questionType, question string, required bool, options []string) (*Question, error)
-func (s *SurveyService) SubmitResponse(surveyID uint, userID *string, ipAddress, userAgent string, answers []AnswerInput) (*Response, error)
 func (s *SurveyService) GetSurvey(id uint) (*Survey, error)
 func (s *SurveyService) UpdateSurvey(id uint, title, description string, isActive bool) error
 func (s *SurveyService) GetAllSurveys() ([]Survey, error)
 func (s *SurveyService) DeleteSurvey(id uint) error
+```
+
+**Questions & Responses**
+```go
+func (s *SurveyService) AddQuestion(surveyID uint, questionType, question string, required bool, options []string) (*Question, error)
+func (s *SurveyService) SubmitResponse(surveyID uint, userID *string, ipAddress, userAgent string, answers []AnswerInput) (*Response, error)
+```
+
+**Analytics & Stats**
+```go
 func (s *SurveyService) GetSurveyStats(surveyID uint) (*SurveyStats, error)
 func (s *SurveyService) GetQuestionStats(surveyID uint) ([]QuestionStats, error)
 func (s *SurveyService) getOptionStats(questionID uint) []OptionStat
 func (s *SurveyService) getRatingStats(questionID uint) *RatingStats 
 func (s *SurveyService) getTextAnswers(questionID uint, limit int) []string
-
 ```
 
-## ⚙️ Installation & Setup
+</details>
+
+---
+
+## ⚡ Installation & Setup
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/survey-app.git
+git clone [https://github.com/](https://github.com/)<your-username>/survey-app.git
 cd survey-app
 ```
 
@@ -86,56 +122,32 @@ go mod tidy
 go run main.go
 ```
 
-The app will start on:
-
-```
-http://localhost:8080
-```
+The app will start on: **`http://localhost:8080`**
 
 ---
 
 ## 🎥 Screenshots
 
-<img width="1088" height="832" alt="image" src="https://github.com/user-attachments/assets/1f0ff7d9-9786-4873-a94a-59660d6856a2" />
-<img width="1073" height="636" alt="image" src="https://github.com/user-attachments/assets/0b4127db-cf90-4ad0-8e8b-7bc313b0af68" />
+| Dashboard View | Survey View |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/1f0ff7d9-9786-4873-a94a-59660d6856a2" alt="Dashboard" width="100%"> | <img src="https://github.com/user-attachments/assets/0b4127db-cf90-4ad0-8e8b-7bc313b0af68" alt="Survey Form" width="100%"> |
 
 ---
 
+## 📈 Future Roadmap
 
-## 🧠 Technical Overview
-
-* **Language:** Go (1.21+)
-* **Database:** SQLite (`surveys.db`)
-* **Routing:** Standard `net/http` or `chi` (depending on your implementation)
-* **Templates:** Go’s `html/template` package
-* **Static assets:** Served from `/static`
-
----
-
-## 🧱 Flow
-
-1. **User visits homepage** — chooses a survey or creates one.
-2. **Handler** processes requests (`handlers/survey.go`).
-3. **Model** queries or inserts survey data (`models/survey.go`).
-4. **View** renders a dynamic HTML template (`views/survey.html`).
-5. **Static files** handle front-end appearance and interactivity.
-
----
-
-## 📈 Future Enhancements
-
-* Add user authentication and session management
-* Support multiple question types (MCQs, ratings, etc.)
-* Store results and analytics
-* REST API endpoints for survey management
-* Add Dockerfile and CI/CD pipeline
+* [ ] User authentication (OAuth/Session auth)
+* [ ] Export results to CSV/PDF
+* [ ] Admin dashboard for advanced analytics
+* [ ] Docker support & CI/CD pipeline
+* [ ] REST API documentation (Swagger/OpenAPI)
 
 ---
 
 ## 🧑‍💻 Author
 
 **Keith Thomson**
-Computer Science Student • Army Veteran • Cloud Developer
+*Computer Science Student • Army Veteran • Cloud Developer*
 💡 Focused on Go, Rust, and system design for data applications.
 
 ---
